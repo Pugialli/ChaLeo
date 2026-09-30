@@ -139,6 +139,11 @@ button{font-family:inherit;cursor:pointer;color:inherit}
 .mc.sai small{color:#fff}
 .mc.livre{background:var(--blush);color:var(--terra);font-family:'Pacifico',cursive;font-size:2vh}
 .mc.linha{box-shadow:0 0 0 .3vh var(--salvia-esc)}
+.baixar-tabs{display:flex;gap:.8vw;margin-bottom:2vh}
+.baixar-tab{flex:1;padding:1.2vh 1vw;border:.2vh solid var(--salvia-linha);background:var(--creme);border-radius:1.2vh;font:600 1.9vh 'Poppins',sans-serif;color:var(--salvia-esc);cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.baixar-tab.ativa{background:var(--terra-suave);border-color:var(--terra-suave);color:#fff}
+.baixar-grupo{display:none}
+.baixar-grupo.vis{display:block}
 .dica-conf{font-size:1.7vh;color:var(--salvia-esc);margin-top:1.4vh}
 .toast{position:fixed;left:50%;bottom:3vh;transform:translateX(-50%) translateY(2vh);background:var(--texto);color:#fff;padding:1.2vh 2.4vw;border-radius:99px;font-size:2vh;opacity:0;transition:.25s;z-index:30;pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%)}
@@ -164,6 +169,7 @@ button{font-family:inherit;cursor:pointer;color:inherit}
       <div class="sec">
         <button class="btn" id="bLista">Ver sorteados</button>
         <button class="btn" id="bConferir">Conferir cartela</button>
+        <button class="btn" id="bBaixar">Baixar cartela</button>
         <button class="btn" id="bDesfazer">Desfazer</button>
         <button class="btn" id="bVoz">Voz: desligada</button>
         <button class="btn" id="bTela">Tela cheia</button>
@@ -198,6 +204,25 @@ button{font-family:inherit;cursor:pointer;color:inherit}
   </div>
 </div></div>
 
+
+<!-- baixar cartelas -->
+<div class="veu" id="vBaixar"><div class="janela grande" style="width:min(105vh,94vw)">
+  <div class="jcab"><h2>Baixar / Imprimir cartelas</h2><button class="fechar" data-fechar>Fechar (Esc)</button></div>
+  <div class="jcorpo">
+    <div class="baixar-tabs">
+      <button class="baixar-tab ativa" id="tabEsp">Cartela específica</button>
+      <button class="baixar-tab" id="tabAle">Cartelas aleatórias</button>
+    </div>
+    <div class="baixar-grupo vis" id="grpEsp">
+      <div class="conf-form"><input id="inBaixarNum" type="number" min="1" max="120" placeholder="Nº da cartela (1 a 120)"><button class="btn" id="bBaixarEsp">Baixar</button></div>
+      <div class="dica-conf">Digite o número da cartela e clique em Baixar. Uma nova aba abrirá pronta para imprimir.</div>
+    </div>
+    <div class="baixar-grupo" id="grpAle">
+      <div class="conf-form"><input id="inBaixarQtd" type="number" min="1" max="10" placeholder="Quantidade (1 a 10)"><button class="btn" id="bBaixarAle">Baixar</button></div>
+      <div class="dica-conf">Serão sorteadas cartelas aleatórias. Uma nova aba abrirá com todas prontas para imprimir.</div>
+    </div>
+  </div>
+</div></div>
 <!-- confirmações -->
 <div class="veu" id="vNovo"><div class="janela pequena confirma">
   <div class="jcab"><h2>Novo jogo?</h2></div>
@@ -399,6 +424,66 @@ function conferir(){
   res.innerHTML = h;
 }
 
+
+/* ===== baixar / imprimir cartelas ===== */
+function gerarPaginaCartelas(nums){
+  const fontCSS = Array.from(document.styleSheets)
+    .flatMap(s=>{try{return Array.from(s.cssRules);}catch(e){return[];}})
+    .filter(r=>r instanceof CSSFontFaceRule)
+    .map(r=>r.cssText)
+    .join('\n');
+
+  const bannerSrc = new URL("header_leonardo.png", location.href).href;
+  const cabHtml = "BINGO".split("").map(l=>`<div class="cab-cell">${l}</div>`).join("");
+  let cardsHtml = "";
+
+  for(const num of nums){
+    const cart = CARTELAS[num];
+    if(!cart) continue;
+    const cels = cart.map(n=>
+      n===0
+        ? `<div class="cel livre"><span class="leo-livre">Leonardo</span><span class="curinga">Curinga</span></div>`
+        : `<div class="cel"><span class="nn">${n}</span>${esc(item(n))}</div>`
+    ).join("");
+    cardsHtml += `<div class="cartela">
+      <div class="card-header">
+        <img class="header-img" src="${bannerSrc}" alt="Leonardo">
+        <div class="subtitulo">Bingo do Chá de Bebê</div>
+      </div>
+      <div class="cab-row">${cabHtml}</div>
+      <div class="grade">${cels}</div>
+      <div class="rodape">Cartela Nº ${String(num).padStart(3,"0")}</div>
+    </div>`;
+  }
+
+  const css = fontCSS + `
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Poppins',sans-serif;background:#fff}
+    .pagina{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(2,1fr);gap:3.5mm;width:198mm;height:285mm;margin:0 auto}
+    .cartela{border:.5mm solid #C9D6BF;border-radius:10px;overflow:hidden;background:#fff;display:flex;flex-direction:column;padding:2.5mm 3mm 1.5mm}
+    .card-header{text-align:center;padding:0 0 .5mm;flex-shrink:0}
+    .header-img{width:82%;height:auto;display:block;margin:0 auto}
+    .subtitulo{font-size:5pt;font-weight:600;letter-spacing:.13em;color:#A89888;text-transform:uppercase;margin-bottom:1mm}
+    .cab-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1.2px;padding:0 0 1.2mm;flex-shrink:0}
+    .cab-cell{background:#C9D6BF;color:#4A6B44;font-weight:700;font-size:7.5pt;text-align:center;padding:1.3mm 0;border-radius:3px}
+    .grade{display:grid;grid-template-columns:repeat(5,1fr);border:.3mm solid #E0E8D8;border-radius:4px;overflow:hidden;flex:1;min-height:0}
+    .cel{border-right:.3mm solid #E8EEE0;border-bottom:.3mm solid #E8EEE0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1mm .7mm;text-align:center;font-size:5pt;font-weight:500;color:#5C4D45;line-height:1.2;gap:.4mm}
+    .cel:nth-child(5n){border-right:none}
+    .cel:nth-last-child(-n+5){border-bottom:none}
+    .nn{font-size:4pt;color:#C0AFA0;font-weight:500;align-self:flex-start;padding-left:1px}
+    .cel.livre{background:#F9E9E1}
+    .leo-livre{font-family:'Pacifico',cursive;font-size:6pt;color:#B86B54;line-height:1.1}
+    .curinga{font-size:3.5pt;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#B86B54;opacity:.7}
+    .rodape{text-align:center;padding:1.5mm;font-size:4.5pt;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#A89888;border-top:.3mm solid #E8EEE0;flex-shrink:0;margin-top:auto}
+    @media print{@page{size:A4;margin:6mm}body{margin:0}}
+  `;
+
+  const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>Cartelas – Chá de Bebê do Leonardo</title><style>${css}</style></head><body><div class="pagina">${cardsHtml}</div><script>window.onload=()=>setTimeout(()=>window.print(),400);<\/script></body></html>`;
+  const w = window.open("","_blank");
+  if(!w){toast("Permita pop-ups para baixar as cartelas.");return;}
+  w.document.write(html);
+  w.document.close();
+}
 /* ===== interface ===== */
 function abrir(id){ $(id).classList.add("aberto"); }
 function fechar(id){ $(id).classList.remove("aberto"); }
@@ -411,7 +496,13 @@ $("bDesfazer").onclick = desfazer;
 $("bNovo").onclick = () => abrir("vNovo");
 $("bSim").onclick = novoJogo;
 $("bLista").onclick = () => { renderLista(); abrir("vLista"); };
-$("bConferir").onclick = () => { abrir("vConf"); $("inConf").focus(); $("inConf").select(); if($("inConf").value) conferir(); };
+$("bBaixar").onclick = () => abrir("vBaixar");
+$("bBaixarEsp").onclick = () => { const n=parseInt($("inBaixarNum").value,10); if(!CARTELAS[n]){toast("Use um número de 1 a 120.");return;} gerarPaginaCartelas([n]); };
+$("inBaixarNum").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("bBaixarEsp").click();}});
+$("bBaixarAle").onclick = () => { const q=Math.min(10,Math.max(1,parseInt($("inBaixarQtd").value,10)||1)); gerarPaginaCartelas(Array.from({length:120},(_,i)=>i+1).sort(()=>Math.random()-.5).slice(0,q)); };
+$("inBaixarQtd").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("bBaixarAle").click();}});
+$("tabEsp").onclick=()=>{$("tabEsp").classList.add("ativa");$("tabAle").classList.remove("ativa");$("grpEsp").classList.add("vis");$("grpAle").classList.remove("vis");};
+$("tabAle").onclick=()=>{$("tabAle").classList.add("ativa");$("tabEsp").classList.remove("ativa");$("grpAle").classList.add("vis");$("grpEsp").classList.remove("vis");};$("bConferir").onclick = () => { abrir("vConf"); $("inConf").focus(); $("inConf").select(); if($("inConf").value) conferir(); };
 $("bVer").onclick = conferir;
 $("inConf").addEventListener("keydown", e => { if(e.key==="Enter"){ e.preventDefault(); conferir(); } });
 $("bVoz").onclick = () => { estado.voz = !estado.voz; gravar(); atualizarVoz(); if(estado.voz) toast("Voz ligada"); else { try{speechSynthesis.cancel()}catch(e){} } };
