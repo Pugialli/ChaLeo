@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jogos — Chá de Bebê do Leonardo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --terra:    #B86B54;
+  --terra-s:  #D9A08F;
+  --rosa:     #CC8F7D;
+  --sage:     #8FA584;
+  --sage-e:   #66805F;
+  --sage-c:   #C9D6BF;
+  --sage-l:   #D6DECB;
+  --creme:    #FDF8F0;
+  --blush:    #F9E9E1;
+  --txt:      #5C4D45;
+  --papel:    #FFFDF9;
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Poppins', system-ui, sans-serif;
+  color: var(--txt);
+  background:
+    radial-gradient(60vh 50vh at 8% 92%,  rgba(201,214,191,.55), transparent 70%),
+    radial-gradient(55vh 45vh at 60% 8%,  rgba(249,225,214,.70), transparent 70%),
+    radial-gradient(50vh 40vh at 45% 100%, rgba(240,226,205,.60), transparent 70%),
+    var(--papel);
+  min-height: 100vh;
+}
+
+.wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 1.5rem 5rem;
+}
+
+/* ── header ───────────────────────────────────────── */
+header {
+  text-align: center;
+  padding: 3.5rem 0 0;
+}
+
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  margin-bottom: 1.25rem;
+}
+
+.ornament-line {
+  flex: 1;
+  max-width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--sage-c));
+}
+.ornament-line.right {
+  background: linear-gradient(90deg, var(--sage-c), transparent);
+}
+
+.ornament-leaf {
+  font-size: 1.15rem;
+  color: var(--sage);
+}
+
+.badge {
+  display: inline-block;
+  background: var(--blush);
+  border: 1px solid var(--rosa);
+  color: var(--terra);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: .3rem 1.1rem;
+  border-radius: 999px;
+  margin-bottom: 1.1rem;
+}
+
+h1 {
+  font-size: clamp(1.9rem, 5vw, 2.9rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--terra);
+  margin-bottom: .5rem;
+}
+
+h1 em {
+  font-style: normal;
+  color: var(--sage-e);
+}
+
+.subtitle {
+  font-size: .95rem;
+  font-weight: 400;
+  opacity: .65;
+  margin-bottom: 0;
+}
+
+.divider {
+  width: 56px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--terra-s), var(--sage));
+  border-radius: 2px;
+  margin: 1.75rem auto 0;
+}
+
+/* ── grid ─────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.4rem;
+  margin-top: 2.75rem;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+  padding: 1.9rem 1.65rem 1.65rem;
+  background: rgba(255,253,249,.88);
+  border: 1.5px solid var(--sage-l);
+  border-radius: 18px;
+  text-decoration: none;
+  color: var(--txt);
+  transition: transform .22s, box-shadow .22s, border-color .22s;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, var(--terra-s), var(--sage));
+  border-radius: 18px 18px 0 0;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 36px rgba(184,107,84,.14);
+  border-color: var(--terra-s);
+}
+
+.card-tag {
+  position: absolute;
+  top: 1rem;
+  right: 1.1rem;
+  font-size: .65rem;
+  font-weight: 600;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+
+.card-icon {
+  font-size: 2.1rem;
+  line-height: 1;
+}
+
+.card h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--terra);
+  line-height: 1.25;
+}
+
+.card p {
+  font-size: .845rem;
+  line-height: 1.65;
+  opacity: .75;
+  flex: 1;
+}
+
+.card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--sage-e);
+  margin-top: .2rem;
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform .2s;
+}
+
+.card:hover .arrow {
+  transform: translateX(5px);
+}
+
+/* ── footer ───────────────────────────────────────── */
+footer {
+  text-align: center;
+  margin-top: 4.5rem;
+}
+
+.footer-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  margin-bottom: .75rem;
+  opacity: .4;
+}
+
+.footer-line {
+  flex: 1;
+  max-width: 100px;
+  height: 1px;
+  background: var(--sage-c);
+}
+
+footer p {
+  font-size: .78rem;
+  opacity: .4;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="ornament">
+      <span class="ornament-line"></span>
+      <span class="ornament-leaf">🌿</span>
+      <span class="ornament-line right"></span>
+    </div>
+    <div class="badge">Chá de Bebê</div>
+    <h1>Jogos do <em>Leonardo</em></h1>
+    <p class="subtitle">Escolha um jogo e que a festa comece!</p>
+    <div class="divider"></div>
+  </header>
+
+  <div class="grid">
+
+    <a class="card" href="sorteador_bingo_cha_leonardo_1.html">
+      <span class="card-tag">Jogo 1</span>
+      <div class="card-icon">🎱</div>
+      <h2>Bingo</h2>
+      <p>Sorteie as pedras e marque nas cartelas. Quem completar uma linha primeiro ganha!</p>
+      <span class="card-cta">Jogar <span class="arrow">→</span></span>
+    </a>
+
+    <a class="card" href="codenames_cha_leonardo_3.html">
+      <span class="card-tag">Jogo 2</span>
+      <div class="card-icon">🕵️</div>
+      <h2>Codenames</h2>
+      <p>Dê dicas de uma palavra só para seus parceiros descobrirem as palavras certas no tabuleiro.</p>
+      <span class="card-cta">Jogar <span class="arrow">→</span></span>
+    </a>
+
+    <a class="card" href="megasenha_cha_leonardo_3.html">
+      <span class="card-tag">Jogo 3</span>
+      <div class="card-icon">🔐</div>
+      <h2>Mega Senha</h2>
+      <p>Descubra a senha secreta com dicas de cores e posições. Raciocínio e dedução!</p>
+      <span class="card-cta">Jogar <span class="arrow">→</span></span>
+    </a>
+
+    <a class="card" href="frases_desenhos_cha_leonardo_5.html">
+      <span class="card-tag">Jogo 4</span>
+      <div class="card-icon">✏️</div>
+      <h2>Adivinhe a Frase</h2>
+      <p>Descubra a frase de filme, música ou série que foi desenhada pelos participantes.</p>
+      <span class="card-cta">Jogar <span class="arrow">→</span></span>
+    </a>
+
+  </div>
+
+  <footer>
+    <div class="footer-ornament">
+      <span class="footer-line"></span>
+      <span>🌿</span>
+      <span class="footer-line"></span>
+    </div>
+    <p>Chá de Bebê do Leonardo &nbsp;·&nbsp; Feito com amor</p>
+  </footer>
+
+</div>
+</body>
+</html>
