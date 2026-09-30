@@ -52,3 +52,5 @@ ChaLeo/
 ## Tecnologia
 
 Sites estáticos em HTML, CSS e JavaScript puro — sem dependências externas nem servidor. Fontes e imagens embutidas em base64 para funcionamento offline.
+
+Todo o projeto foi desenvolvido com **vibecoding** assistido pelo [Claude](https://claude.ai) (Anthropic).
